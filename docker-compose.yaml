@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  wireguard-xray:
+    build: .
+    image: wireguard-xray
+    container_name: wireguard-xray
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    volumes:
+      - ./template/wg0.conf.template:/etc/wireguard/wg0.conf.template
+      - ./template/config.json.template:/etc/xray/config.json.template
+    ports:
+      - "${WG_PORT}:${WG_PORT}/udp"
+    sysctls:
+      - net.ipv4.ip_forward=1
+      - net.ipv6.conf.all.forwarding=1
+    environment:
+      - WG_PRIVATE_KEY=${WG_PRIVATE_KEY}
+      - WG_PEER_PUBLIC_KEY=${WG_PEER_PUBLIC_KEY}
+      - WG_PORT=${WG_PORT}
+      - WG_IP=${WG_IP}
+      - WG_PEER_IP=${WG_PEER_IP}
+      - VLESS_ADDRESS=${VLESS_ADDRESS}
+      - VLESS_UUID=${VLESS_UUID}
+      - XRAY_PUBLIC_KEY=${XRAY_PUBLIC_KEY}
+      - XRAY_SHORT_ID=${XRAY_SHORT_ID}
+      - XRAY_SERVERNAME=${XRAY_SERVERNAME}
+    restart: unless-stopped

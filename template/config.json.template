@@ -1,0 +1,71 @@
+{
+  "log": {
+  "loglevel": "info"
+  },
+  "inbounds": [
+    {
+      "tag": "wireguard",
+      "port": 10800,
+      "listen": "127.0.0.1",
+      "protocol": "dokodemo-door",
+      "settings": {
+        "network": "tcp,udp",
+        "followRedirect": true,
+        "address": "0.0.0.0",
+        "port": 0
+      }
+    },
+    {
+      "tag": "http-proxy",
+      "port": 10801,
+      "listen": "127.0.0.1",
+      "protocol": "http",
+      "settings": {}
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "vless",
+      "settings": {
+        "vnext": [
+          {
+            "address": "${VLESS_ADDRESS}",
+            "port": 443,
+            "users": [
+              {
+                "id": "${VLESS_UUID}",
+                "encryption": "none"
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "reality",
+        "realitySettings": {
+          "fingerprint": "chrome",
+          "serverName": "${XRAY_SERVERNAME}",
+          "publicKey": "${XRAY_PUBLIC_KEY}",
+          "shortId": "${XRAY_SHORT_ID}",
+          "spiderX": "/"
+        }
+      },
+      "tag": "proxy"
+    },
+    {
+      "protocol": "freedom",
+      "settings": {},
+      "tag": "direct"
+    }
+  ],
+  "routing": {
+    "rules": [
+      {
+        "type": "field",
+        "inboundTag": ["wireguard", "http-proxy"],
+        "outboundTag": "proxy"
+      }
+    ]
+  }
+}

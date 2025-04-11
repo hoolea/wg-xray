@@ -1,0 +1,11 @@
+[Interface]
+PrivateKey = ${WG_PRIVATE_KEY}
+Address = ${WG_IP}/24
+ListenPort = ${WG_PORT}
+PostUp = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -t nat -A PREROUTING -i wg0 -p udp -j DNAT --to-destination 127.0.0.1:10800; iptables -t nat -A PREROUTING -i wg0 -p tcp -j DNAT --to-destination 127.0.0.1:10800
+PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -t nat -D PREROUTING -i wg0 -p udp -j DNAT --to-destination 127.0.0.1:10800; iptables -t nat -D PREROUTING -i wg0 -p tcp -j DNAT --to-destination 127.0.0.1:10800
+MTU = 1420
+
+[Peer]
+PublicKey = ${WG_PEER_PUBLIC_KEY}
+AllowedIPs = ${WG_PEER_IP}/32
