@@ -76,7 +76,7 @@ check_loop() {
     INTERVAL=20
     FAILS_THRESHOLD=3
     fail_count=0
-    TEST_URL="https://rutracker.org" # <---- Адрес сайта для проверка тунеля
+    TEST_URL="https://rutracker.org" # <---- Адрес сайта для проверки тунеля
     LOG_FILE="/var/log/xray-health.log"
 
     echo "$(date) - Starting Xray health monitor..." | tee -a "$LOG_FILE"
@@ -102,20 +102,20 @@ check_loop() {
 # -------------------------------
 # Запуск health-check и контроль
 # -------------------------------
-check_loop &                 # запускаем один раз
+check_loop &
 CHECK_PID=$!
 
 # -------------------------------
 # Основной цикл
 # -------------------------------
 while true; do
-    # следим за Xray
+
     if ! kill -0 "$XRAY_PID" 2>/dev/null; then
         echo "$(date) - Xray process died, restarting..." | tee -a /var/log/xray-health.log
         start_xray
     fi
 
-    # следим за health-check (если вдруг упал — перезапускаем)
+
     if ! kill -0 "$CHECK_PID" 2>/dev/null; then
         echo "$(date) - Health-check died, restarting..." | tee -a /var/log/xray-health.log
         check_loop &
