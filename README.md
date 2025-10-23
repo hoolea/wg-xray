@@ -53,5 +53,7 @@ echo "net.ipv4.conf.all.route_localnet=1" | sudo tee -a /etc/sysctl.conf
 sudo sysctl -p
 ```
 **net.ipv4.ip_forward=1** - включает IP-переадресацию (routing) на уровне ядра Linux.
+
 **net.ipv4.conf.all.route_localnet=1** - разрешает маршрутизацию пакетов, адресованных локальным адресам (127.0.0.0/8), через интерфейсы.
+
 **sysctl -p** - Применяет (загружает) параметры из /etc/sysctl.conf без перезагрузки системы.
